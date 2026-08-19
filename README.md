@@ -1,6 +1,23 @@
-# lru-cache
+git # lru-cache
 
 lru-cache is a cache you build from scratch. A cache holds a fixed number of key/value pairs, and the rule that makes it interesting is what happens when it fills up. You read a value by its key, you write a key/value pair, and every time you touch an entry, reading it or writing it, that entry becomes the freshest one. When the cache is full and a brand new key comes in, the entry nobody has touched in the longest time gets dropped to make room. The catch is that both the read and the write have to stay O(1), so the structure underneath has to do real work.
+
+## Implementation
+
+The cache is implemented in Python as `LRUCache(capacity)`. It uses a dictionary for key-to-node lookup and a doubly linked list of `LinkedNode` objects for recency ordering.
+
+```python
+from lru_cache import LRUCache
+
+cache = LRUCache(2)
+cache.put("language", "Python")
+cache.put("runtime", "CPython")
+
+assert cache.get("language") == "Python"
+assert cache.get("missing") is None
+```
+
+`get` and `put` both run in O(1). A successful `get` and every `put` move the touched entry to the most-recently-used position. A new insertion at capacity evicts the least-recently-used entry. Cache values may be `None`; dictionary keys must be hashable. The implementation intentionally focuses on the core cache behavior rather than thread safety, TTLs, metrics, or deployment concerns.
 
 ## Your task
 
